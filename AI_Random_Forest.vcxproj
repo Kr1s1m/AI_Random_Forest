@@ -139,7 +139,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DData.cpp" />
+    <ClCompile Include="DSample.cpp" />
+    <ClCompile Include="DTree.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RandomForest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DData.h" />
+    <ClInclude Include="DSample.h" />
+    <ClInclude Include="DTree.h" />
+    <ClInclude Include="RandomForest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

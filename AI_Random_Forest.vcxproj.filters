@@ -18,5 +18,31 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DSample.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomForest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DSample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomForest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
