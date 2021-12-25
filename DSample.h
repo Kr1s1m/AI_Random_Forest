@@ -9,12 +9,11 @@ class DSample
 private:
     unsigned int id;
     std::vector<DValue> features;
-    DValue target;
 
 public:
 
     DSample();
-    DSample(unsigned int, const std::vector<DValue>&, DValue);
+    DSample(unsigned int, const std::vector<DValue>&);
 
     int getID()const;
     const std::vector<DValue>& getFeatures()const;

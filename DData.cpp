@@ -46,7 +46,6 @@ void DData::enumerateUnordered()
 
     unsigned int featureCount = (*it).getFeatures().size();
 
-    //std::cout << "Feature count: " << featureCount << "\n";
 
     for (featureIndex; featureIndex < featureCount; featureIndex++)
     {

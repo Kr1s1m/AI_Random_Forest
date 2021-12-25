@@ -5,17 +5,16 @@ DSample::DSample()
 {
     id = 0;
     features = std::vector<DValue>();
-    target = DValue();
 }
 
-DSample::DSample(unsigned int _id, const std::vector<DValue>& _features, DValue _target):
-    id(_id), target(_target)
+DSample::DSample(unsigned int _id, const std::vector<DValue>& _features)
 {
+    id = _id;
+
     std::vector<DValue>::const_iterator it;
 
     for (it = _features.begin(); it != _features.end(); it++)
         features.push_back(*it);
-
 
 }
 
@@ -31,7 +30,7 @@ const std::vector<DValue>& DSample::getFeatures() const
 
 const DValue& DSample::getTargetClass() const
 {
-    return target;
+    return features.back();
 }
 
 const DValue& DSample::operator[](unsigned int index) const
@@ -67,10 +66,6 @@ std::istream& operator>>(std::istream& is, DSample& sample)
         sample.features.push_back(DValue( token, numeric, isOrdered ));
     }
 
-    std::vector<DValue>::iterator lastFeaturePtr = sample.features.end() - 1;
-
-    sample.target = *lastFeaturePtr;
-    sample.features.erase(lastFeaturePtr);
 
     return is;
 }
@@ -89,7 +84,7 @@ std::ostream& operator<<(std::ostream& os, const DSample& sample)
             os << it->getStringValue() << ';';
 
 
-    os << sample.target.getStringValue() << '\n';
+    os << sample.getTargetClass().getStringValue() << '\n';
 
     return os;
 }
