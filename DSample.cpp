@@ -45,6 +45,11 @@ const DValue& DSample::operator[](unsigned int index) const
     return features[index];
 }
 
+DValue& DSample::getFeatureWriteAcessAt(unsigned int featureIndex)
+{
+    return features[featureIndex];
+}
+
 std::istream& operator>>(std::istream& is, DSample& sample)
 {
  

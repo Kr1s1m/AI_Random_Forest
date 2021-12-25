@@ -3,6 +3,7 @@
 #include "DSample.h"
 #include <fstream>
 #include <sstream>
+#include <unordered_map>
 
 class DData
 {
@@ -14,6 +15,7 @@ private:
 
 
     void loadFromCSV(const std::string&);
+    void enumerateUnordered();
 
 public:
 

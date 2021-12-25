@@ -19,11 +19,9 @@ void DData::loadFromCSV(const std::string& _fileName)
 
     while (ifile >> line)
     {
-        iss.str(line);
-
-        //std::istringstream iss(line);
-
         DSample sample;
+
+        iss.str(line);
         iss >> sample;
 
         samples.push_back(sample);
@@ -37,11 +35,60 @@ void DData::loadFromCSV(const std::string& _fileName)
 
 }
 
+void DData::enumerateUnordered()
+{
+    if (samples.empty())  
+        return;
+       
+
+    unsigned int featureIndex = 0;   
+    std::vector<DSample>::iterator it = samples.begin();
+
+    unsigned int featureCount = (*it).getFeatures().size();
+
+    //std::cout << "Feature count: " << featureCount << "\n";
+
+    for (featureIndex; featureIndex < featureCount; featureIndex++)
+    {
+        if ((*it)[featureIndex].isOrdered())
+            continue;
+        
+        double currentEnumeration = 0.0;
+        std::string currentLabel;
+
+        std::unordered_map<std::string, double> toNumeric;
+        
+
+        for (it; it != samples.end(); it++)
+        {
+            currentLabel = (*it)[featureIndex].getStringValue();
+
+            if (toNumeric.find(currentLabel) != toNumeric.end())
+            {
+                (*it).getFeatureWriteAcessAt(featureIndex).setNumericValue(toNumeric[currentLabel]);
+            }
+            else
+            {
+                
+                (*it).getFeatureWriteAcessAt(featureIndex).setNumericValue(currentEnumeration);
+               
+                toNumeric.insert(std::make_pair(currentLabel, currentEnumeration));
+                currentEnumeration += 1.0;
+            }
+        }
+
+        it = samples.begin();
+
+    }
+
+}
+
 DData::DData(const std::string& _fileName)
 {
     fileName = _fileName;
 
     loadFromCSV(_fileName);
+    enumerateUnordered();
     
 }
 

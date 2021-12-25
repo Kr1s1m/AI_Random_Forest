@@ -22,6 +22,8 @@ public:
 
     const DValue& operator[](unsigned int) const;
 
+    DValue& getFeatureWriteAcessAt(unsigned int);
+
     friend std::istream& operator>>(std::istream&, DSample&);
     friend std::ostream& operator<<(std::ostream&, const DSample&);
 
