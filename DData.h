@@ -24,6 +24,8 @@ public:
     const std::vector<std::string>& getColNames()const;
     int getSampleSize()const;
 
+    const DSample& operator[](unsigned int) const;
+
     void addSample(const DSample&);
     void saveInside(const std::string&) const;
 

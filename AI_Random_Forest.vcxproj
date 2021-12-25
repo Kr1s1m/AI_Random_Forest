@@ -142,6 +142,7 @@
     <ClCompile Include="DData.cpp" />
     <ClCompile Include="DSample.cpp" />
     <ClCompile Include="DTree.cpp" />
+    <ClCompile Include="DValue.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RandomForest.cpp" />
   </ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="DData.h" />
     <ClInclude Include="DSample.h" />
     <ClInclude Include="DTree.h" />
+    <ClInclude Include="DValue.h" />
     <ClInclude Include="RandomForest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,31 +1,6 @@
 #include "DSample.h"
 
 
-DValue::DValue(std::string _string) : string(_string)
-{
-    ordered = false;
-    numeric = 0.0;
-}
-
-DValue::DValue(double _numeric) : numeric(_numeric)
-{
-    ordered = true;
-    string = std::to_string(_numeric);
-}
-
-DValue::DValue(std::string _string, double _numeric, bool _ordered) :
-    string(_string), numeric(_numeric), ordered(_ordered)
-{
-
-}
-
-DValue::DValue()
-{
-    string = "";
-    numeric = 0.0;
-    ordered = false;
-}
-
 DSample::DSample()
 {
     id = 0;
@@ -57,6 +32,17 @@ const std::vector<DValue>& DSample::getFeatures() const
 const DValue& DSample::getTargetClass() const
 {
     return target;
+}
+
+const DValue& DSample::operator[](unsigned int index) const
+{
+    if (index > features.size() - 1 || index < 0 || features.empty())
+    {
+        std::cerr << "Out of bounds index in DSample.features array!";
+        exit(1);
+    }
+
+    return features[index];
 }
 
 std::istream& operator>>(std::istream& is, DSample& sample)
@@ -92,13 +78,13 @@ std::ostream& operator<<(std::ostream& os, const DSample& sample)
     os << sample.id << ';';
 
     for (it; it != sample.features.end(); it++)
-        if (it->numeric)
-            os << it->numeric << ';';
+        if (it->isOrdered())
+            os << it->getNumericValue() << ';';
         else
-            os << it->string << ';';
+            os << it->getStringValue() << ';';
 
 
-    os << sample.target.string << '\n';
+    os << sample.target.getStringValue() << '\n';
 
     return os;
 }

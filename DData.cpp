@@ -65,6 +65,17 @@ int DData::getSampleSize() const
     return samples.size();
 }
 
+const DSample& DData::operator[](unsigned int index)const
+{
+    if (index > samples.size() - 1 || index < 0 || samples.empty())
+    {
+        std::cerr << "Out of bounds index in DData.samples array!";
+        exit(1);
+    }
+
+    return samples[index];
+}
+
 void DData::addSample(const DSample& sample)
 {
 

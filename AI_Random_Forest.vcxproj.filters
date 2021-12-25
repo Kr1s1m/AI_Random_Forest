@@ -30,6 +30,9 @@
     <ClCompile Include="RandomForest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DSample.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RandomForest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,23 +1,8 @@
 #pragma once
 
-#include <iostream>
-#include <string>
 #include <vector>
+#include "DValue.h"
 
-
-struct DValue
-{
-    std::string string;
-    double numeric;
-    bool ordered;
-
-    DValue(std::string);
-    DValue(double);
-
-    DValue(std::string, double, bool);
-    DValue();
-
-};
 
 class DSample
 {
@@ -34,6 +19,8 @@ public:
     int getID()const;
     const std::vector<DValue>& getFeatures()const;
     const DValue& getTargetClass()const;
+
+    const DValue& operator[](unsigned int) const;
 
     friend std::istream& operator>>(std::istream&, DSample&);
     friend std::ostream& operator<<(std::ostream&, const DSample&);
