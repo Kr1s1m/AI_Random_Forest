@@ -1,8 +1,7 @@
 #pragma once
-#include <algorithm>
+
 #include <random>
 #include <iterator>
-#include <cstdlib>
 
 template<class bidiiter>
 bidiiter random_unique(bidiiter begin, bidiiter end, size_t num_random) 

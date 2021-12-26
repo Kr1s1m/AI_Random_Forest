@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <functional>
 #include <numeric>
-#include <random>
+#include <algorithm>
 #include "random_unique.h"
 
 class DData

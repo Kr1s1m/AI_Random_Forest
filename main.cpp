@@ -43,6 +43,13 @@ int main()
 
     for (unsigned int i = 0; i < featureCount; i++)
         std::cout << kek[i] << " ";
+    std::cout << '\n';
+    
+    std::vector<unsigned int> lmao;
+    trainingData.generateSampleIndices(lmao);
+
+    for (unsigned int i = 0; i < lmao.size(); i++)
+        std::cout << lmao[i] << " ";
     */
 
     return 0;
