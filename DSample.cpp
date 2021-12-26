@@ -23,6 +23,12 @@ int DSample::getID() const
     return id;
 }
 
+unsigned int DSample::getFeatureCount() const
+{
+    //features.size() - 1, because the target class is stored at back() of features
+    return features.size() - 1;
+}
+
 const std::vector<DValue>& DSample::getFeatures() const
 {
     return features;

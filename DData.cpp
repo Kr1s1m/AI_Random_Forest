@@ -150,3 +150,41 @@ void DData::saveInside(const std::string& outputFileName) const
 
     ofile.close();
 }
+
+void DData::generateFeatureIndices(std::vector<unsigned int>& featureIndices, std::function<unsigned int(unsigned int)> featureFunc)
+{
+    if (samples.empty())
+        return;
+
+ 
+    unsigned int originalFeatureCount = (*this)[0].getFeatureCount();
+    unsigned int mutatedFeatureCount = featureFunc(originalFeatureCount);
+
+    featureIndices = std::vector<unsigned int>(originalFeatureCount);
+
+    //fill featureIndices with valid indices - range(0,.., featureCount-1)
+    std::iota(featureIndices.begin(), featureIndices.end(), 0);
+
+    //randomly pick and place mutatedFeatureCount elements at the front of featureIndices
+    random_unique(featureIndices.begin(), featureIndices.end(), mutatedFeatureCount);
+
+    //get rid of the
+
+    
+}
+
+void DData::generateSampleIndices(std::vector<unsigned int>& sampleIndices)
+{
+    if (samples.empty())
+        return;
+
+
+    std::random_device randomDevice;
+    std::mt19937 randomGenerator(randomDevice());
+    std::uniform_int_distribution<> uniformDistirbution(0, samples.size() - 1);
+
+    sampleIndices.clear();
+
+    for (std::vector<DSample>::const_iterator it = samples.begin(); it != samples.end(); it++)
+        sampleIndices.push_back(uniformDistirbution(randomGenerator));
+}

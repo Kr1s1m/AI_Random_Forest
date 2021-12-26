@@ -1,28 +1,15 @@
 #pragma once
 
 #include "DData.h"
-#include <unordered_map>
+#include "DNode.h"
 
 
-class DNode
-{
-public:
-    std::unordered_map<std::string, unsigned int> amount;
-    std::string label;
-    double impurity;
-    int depth;
-    bool terminal;
-
-    DNode* left;
-    DNode* right;
-
-};
 
 class DTree
 {
 private:
 
-    DNode* root;
+    std::unique_ptr<DNode> root;
 
     int maxDepth;
     int minSamplesPerSplit;
@@ -30,13 +17,16 @@ private:
 
     double impurityThreshold;
 
-
-    void create();
+    std::function<double()> impurityFunction;
+    std::function<unsigned(unsigned)> featureFunction;
+    
 
 
 public:
 
     DTree(int, int, int, double);
+
+    void fit(const DData&);
 
 };
 

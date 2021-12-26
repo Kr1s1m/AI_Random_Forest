@@ -17,6 +17,11 @@ public:
     DValue(std::string, double, bool);
     DValue();
 
+    DValue(const DValue&);
+
+    bool operator==(const DValue&)const;
+    DValue& operator=(const DValue&);
+
     const std::string& getStringValue()const;
     double getNumericValue()const;
     bool isOrdered()const;

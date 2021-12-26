@@ -16,6 +16,7 @@ public:
     DSample(unsigned int, const std::vector<DValue>&);
 
     int getID()const;
+    unsigned int getFeatureCount()const;
     const std::vector<DValue>& getFeatures()const;
     const DValue& getTargetClass()const;
 

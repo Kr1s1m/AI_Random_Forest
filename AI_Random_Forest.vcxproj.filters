@@ -33,6 +33,12 @@
     <ClCompile Include="DValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="random_unique.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DSample.h">
@@ -48,6 +54,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="random_unique.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

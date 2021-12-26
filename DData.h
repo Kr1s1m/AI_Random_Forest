@@ -4,6 +4,10 @@
 #include <fstream>
 #include <sstream>
 #include <unordered_map>
+#include <functional>
+#include <numeric>
+#include <random>
+#include "random_unique.h"
 
 class DData
 {
@@ -31,5 +35,7 @@ public:
     void addSample(const DSample&);
     void saveInside(const std::string&) const;
 
+    void generateFeatureIndices(std::vector<unsigned int>&, std::function<unsigned int(unsigned int)>);
+    void generateSampleIndices(std::vector<unsigned int>&);
 
 };

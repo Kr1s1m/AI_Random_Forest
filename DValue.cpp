@@ -26,6 +26,29 @@ DValue::DValue()
     ordered = false;
 }
 
+DValue::DValue(const DValue& other) :
+    string(other.string), numeric(other.numeric), ordered(other.ordered)
+{
+
+}
+
+bool DValue::operator==(const DValue& other)const
+{
+    return (numeric == other.numeric) && (ordered == other.ordered) && (string == other.string);
+}
+
+DValue& DValue::operator=(const DValue& other) 
+{
+    if (this != &other)
+    {
+        string = other.string;
+        numeric = other.numeric;
+        ordered = other.ordered;
+
+    }
+    return *this;
+}
+
 const std::string& DValue::getStringValue() const
 {
     return string;

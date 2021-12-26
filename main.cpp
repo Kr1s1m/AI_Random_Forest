@@ -1,5 +1,7 @@
 #include "RandomForest.h"
 
+
+
 int main()
 {
     
@@ -26,7 +28,22 @@ int main()
         std::cout << trainingData[i][4].getStringValue() << " "
         << trainingData[i][4].getNumericValue() << "\n";
 
-    */    
+    */
+
+    /*
+    std::vector<unsigned int> kek;
+
+    trainingData.generateFeatureIndices(kek, [](unsigned int x){return (unsigned int)std::sqrt(x);});
+
+    unsigned int featureCount = trainingData[0].getFeatureCount();
+    std::cout << featureCount << '\n';
+
+    featureCount = (unsigned int)std::sqrt(featureCount);
+    std::cout << featureCount << '\n';
+
+    for (unsigned int i = 0; i < featureCount; i++)
+        std::cout << kek[i] << " ";
+    */
 
     return 0;
 
