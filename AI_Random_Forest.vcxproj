@@ -144,6 +144,7 @@
     <ClCompile Include="DSample.cpp" />
     <ClCompile Include="DTree.cpp" />
     <ClCompile Include="DValue.cpp" />
+    <ClCompile Include="impurityFunctions.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RandomForest.cpp" />
     <ClCompile Include="random_unique.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="DSample.h" />
     <ClInclude Include="DTree.h" />
     <ClInclude Include="DValue.h" />
+    <ClInclude Include="impurityFunctions.h" />
     <ClInclude Include="RandomForest.h" />
     <ClInclude Include="random_unique.h" />
   </ItemGroup>

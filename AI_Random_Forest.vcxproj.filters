@@ -39,6 +39,9 @@
     <ClCompile Include="random_unique.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="impurityFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DSample.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="random_unique.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="impurityFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
