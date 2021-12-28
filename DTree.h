@@ -28,5 +28,7 @@ public:
 
     void fit(const DData&);
 
+    void classify(const DSample&)const;
+
 };
 

@@ -13,7 +13,11 @@ private:
 
 public:
 
-	RandomForest(unsigned int, DData&);
+	RandomForest(unsigned int);
+
+	void fit(const DData&);
+
+	void classify(const DSample&)const;
 
 };
 

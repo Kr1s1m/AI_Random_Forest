@@ -8,9 +8,6 @@ class DNode
 private:
 
 public:
-    std::unordered_map<double, unsigned int> amount;
-
-   
 
     double threshold;
     double impurity;

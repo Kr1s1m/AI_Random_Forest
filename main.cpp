@@ -30,6 +30,7 @@ int main()
 
     */
 
+    
     /*
     std::vector<unsigned int> kek;
 
@@ -41,16 +42,25 @@ int main()
     featureCount = (unsigned int)std::sqrt(featureCount);
     std::cout << featureCount << '\n';
 
-    for (unsigned int i = 0; i < featureCount; i++)
+    for (unsigned int i = 0; i < kek.size(); i++)
         std::cout << kek[i] << " ";
     std::cout << '\n';
     
-    std::vector<unsigned int> lmao;
-    trainingData.generateSampleIndices(lmao);
+    std::set<unsigned int> lmao;
+    std::vector<double> lmaow;
 
-    for (unsigned int i = 0; i < lmao.size(); i++)
-        std::cout << lmao[i] << " ";
+    trainingData.generateSampleIndices(lmao, lmaow);
+
+    for (auto l : lmao)
+        std::cout << l << " ";
+
+    std::cout << '\n';
+
+    for (unsigned int i = 0; i < lmaow.size(); i++)
+        std::cout << lmaow[i] << " ";
     */
+
+
 
     return 0;
 

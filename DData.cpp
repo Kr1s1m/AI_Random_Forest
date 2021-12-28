@@ -165,15 +165,21 @@ void DData::generateFeatureIndices(std::vector<unsigned int>& featureIndices, st
     //fill featureIndices with valid indices - range(0,.., featureCount-1)
     std::iota(featureIndices.begin(), featureIndices.end(), 0);
 
-    //randomly pick and place mutatedFeatureCount elements at the front of featureIndices
-    random_unique(featureIndices.begin(), featureIndices.end(), mutatedFeatureCount);
+    //if mutated =/= original
+    if (mutatedFeatureCount < originalFeatureCount)
+    {
+        //randomly pick and place mutatedFeatureCount elements at the front of featureIndices
+        random_unique(featureIndices.begin(), featureIndices.end(), mutatedFeatureCount);
 
-    //get rid of the
-
+        //remove and free the memory for the indices that we dont need
+        featureIndices.erase(featureIndices.begin() + mutatedFeatureCount, featureIndices.end());
+    }
+    
     
 }
 
-void DData::generateSampleIndices(std::vector<unsigned int>& sampleIndices)
+
+void DData::generateSampleIndices(std::set<unsigned int>& sampleIndices, std::vector<double>& sampleWeights)
 {
     if (samples.empty())
         return;
@@ -183,8 +189,18 @@ void DData::generateSampleIndices(std::vector<unsigned int>& sampleIndices)
     std::mt19937 randomGenerator(randomDevice());
     std::uniform_int_distribution<> uniformDistirbution(0, samples.size() - 1);
 
+
     sampleIndices.clear();
+    sampleWeights.clear();
+
+    sampleWeights = std::vector<double>(samples.size());
 
     for (std::vector<DSample>::const_iterator it = samples.begin(); it != samples.end(); it++)
-        sampleIndices.push_back(uniformDistirbution(randomGenerator));
+    {
+        unsigned int generatedIndex = uniformDistirbution(randomGenerator);
+
+        sampleIndices.insert(generatedIndex);
+        sampleWeights[generatedIndex]++;
+    }
+        
 }

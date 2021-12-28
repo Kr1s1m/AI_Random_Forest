@@ -3,6 +3,7 @@
 #include "DSample.h"
 #include <fstream>
 #include <sstream>
+#include <set>
 #include <unordered_map>
 #include <functional>
 #include <numeric>
@@ -36,6 +37,6 @@ public:
     void saveInside(const std::string&) const;
 
     void generateFeatureIndices(std::vector<unsigned int>&, std::function<unsigned int(unsigned int)>);
-    void generateSampleIndices(std::vector<unsigned int>&);
+    void generateSampleIndices(std::set<unsigned int>&, std::vector<double>&);
 
 };
