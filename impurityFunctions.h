@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 #include <cmath>
+#include "DData.h"
 
-double calculateGiniIndex(std::vector<unsigned int>&, std::vector<double>&);
+double calculateGiniIndex(const std::vector<unsigned int>&);
 
-double calculateShannonEntropy(std::vector<unsigned int>&, std::vector<double>&);
+double calculateShannonEntropy(const std::vector<unsigned int>&);

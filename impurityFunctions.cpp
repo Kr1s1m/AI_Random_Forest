@@ -1,23 +1,23 @@
 #include "impurityFunctions.h"
 
 
-double calculateGiniIndex(std::vector<unsigned int>& sampleIndices, std::vector<double>& sampleWeights)
+double calculateGiniIndex(const std::vector<unsigned int>& classCounts)
 {
 	double giniIndex = 0.0;
-
-	double totalSamples = 0.0;
-
-	std::vector<unsigned int>::const_iterator indexIt = sampleIndices.begin();
-
-	for (indexIt; indexIt != sampleIndices.end(); indexIt++)
-		totalSamples += sampleWeights[*indexIt];
-
-	indexIt = sampleIndices.begin();
 	double currentProbability = 0.0;
 
-	for (indexIt; indexIt != sampleIndices.end(); indexIt++)
+	//sum of class counts is at the back of the vector, generatred while they were calculated
+	double totalSamples = (double)classCounts.back();
+
+	std::vector<unsigned int>::const_iterator classCountsIt = classCounts.begin();
+
+	for (classCountsIt; classCountsIt != classCounts.end() - 1; classCountsIt++)
 	{
-		currentProbability = sampleWeights[*indexIt] / totalSamples;
+		
+		if (*classCountsIt == 0)
+			continue;
+
+		currentProbability = (double)(*classCountsIt) / totalSamples;
 
 		giniIndex += currentProbability * (1 - currentProbability);
 	}
@@ -26,26 +26,27 @@ double calculateGiniIndex(std::vector<unsigned int>& sampleIndices, std::vector<
 		
 }
 
-double calculateShannonEntropy(std::vector<unsigned int>& sampleIndices, std::vector<double>& sampleWeights)
+double calculateShannonEntropy(const std::vector<unsigned int>& classCounts)
 {
-	double shanonEntropy = 0.0;
-
-	double totalSamples = 0.0;
-
-	std::vector<unsigned int>::const_iterator indexIt = sampleIndices.begin();
-
-	for (indexIt; indexIt != sampleIndices.end(); indexIt++)
-		totalSamples += sampleWeights[*indexIt];
-
-	indexIt = sampleIndices.begin();
+	double shannonEntropy = 0.0;
 	double currentProbability = 0.0;
 
-	for (indexIt; indexIt != sampleIndices.end(); indexIt++)
-	{
-		currentProbability = sampleWeights[*indexIt] / totalSamples;
+	//sum of class counts is at the back of the vector, generatred while they were calculated
+	double totalSamples = (double)classCounts.back();
 
-		shanonEntropy += currentProbability * std::log2(currentProbability);
+
+	std::vector<unsigned int>::const_iterator classCountsIt = classCounts.begin();
+
+	for (classCountsIt; classCountsIt != classCounts.end() - 1; classCountsIt++)
+	{
+
+		if (*classCountsIt == 0)
+			continue;
+
+		currentProbability = (double)(*classCountsIt) / totalSamples;
+
+		shannonEntropy += currentProbability * std::log2(currentProbability);
 	}
 
-	return -shanonEntropy;
+	return -shannonEntropy;
 }
