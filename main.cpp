@@ -60,8 +60,7 @@ int main()
         std::cout << lmaow[i] << " ";
     */
     
-
-
+ 
 
     return 0;
 
