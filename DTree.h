@@ -3,7 +3,10 @@
 #include "DData.h"
 #include "DNode.h"
 
+#include "impurityFunctions.h"
 
+using ImpurityFunctor = std::function<double(std::vector<unsigned int>&, std::vector<double>&)>;
+using FeatureFunctor = std::function<double(std::vector<unsigned int>&, std::vector<double>&)>;
 
 class DTree
 {
@@ -16,19 +19,21 @@ private:
     int minSamplesPerLeaf;
 
     double impurityThreshold;
-
-    std::function<double()> impurityFunction;
-    std::function<unsigned(unsigned)> featureFunction;
     
+    double strength;
 
+    ImpurityFunctor impurityFunction;
+    FeatureFunctor featureFunction;
+    
+    void calculateStrength(const DData&, std::vector<double>&);
 
 public:
 
-    DTree(int, int, int, double);
+    DTree(int, int, int, double, ImpurityFunctor, FeatureFunctor);
 
     void fit(const DData&);
 
-    void classify(const DSample&)const;
+    DValue classify(const DSample&)const;
 
 };
 
