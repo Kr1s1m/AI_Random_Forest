@@ -1,13 +1,13 @@
-#include "RandomForest.h"
+#include "DRandomForest.h"
 
 
 
 int main()
 {
     
-    DData trainingData("fruit training set.csv");
+    //DData trainingData("fruit training set.csv");
 
-    //RandomForest randomForest(100, trainingData);
+    //DRandomForest randomForest(100, trainingData);
 
     /*
     for (unsigned int i = 0; i < trainingData.getSampleSize(); i++)
@@ -60,7 +60,14 @@ int main()
         std::cout << lmaow[i] << " ";
     */
     
- 
+    /*
+    std::vector<unsigned int> classCounts = { 7, 0, 4, 0, 0, 1, 12 };
+
+    std::cout << calculateGiniIndex(classCounts) << '\n';
+    std::cout << calculateShannonEntropy(classCounts) << '\n';
+    */
+    
+    
 
     return 0;
 

@@ -147,7 +147,7 @@
     <ClCompile Include="featureFunctions.cpp" />
     <ClCompile Include="impurityFunctions.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="RandomForest.cpp" />
+    <ClCompile Include="DRandomForest.cpp" />
     <ClCompile Include="random_unique.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -158,7 +158,7 @@
     <ClInclude Include="DValue.h" />
     <ClInclude Include="featureFunctions.h" />
     <ClInclude Include="impurityFunctions.h" />
-    <ClInclude Include="RandomForest.h" />
+    <ClInclude Include="DRandomForest.h" />
     <ClInclude Include="random_unique.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
