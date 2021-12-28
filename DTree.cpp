@@ -17,8 +17,8 @@ impurityFunction(_impurityFunction), featureFunction(_featureFunction)
 void DTree::calculateClassCounts(std::vector<unsigned int>& classCounts,
 								 const DData& data, 
 								 std::vector<unsigned int>& sampleIndices,
-	                             std::vector<double>& sampleWeights)
-const
+	                             std::vector<double>& sampleWeights
+								)const
 
 {
 	double totalSamples = 0.0;
