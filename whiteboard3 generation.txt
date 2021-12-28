@@ -1,5 +1,16 @@
-4
-2
-1 2
-0 2 3 4 5 8
-5 0 2 2 1 1 0 0 1 0 0 0
+12			 <- sampleCount
+
+4			 <- featureCount
+2			 <- f(featureCount)
+1 2			 <- random f(featureCount) feature indices
+0 2 3 4 5 8		 <- bootstrapped set of sample indices
+5 0 2 2 1 1 0 0 1 0 0 0	 <- bootstrap index to weight dictionary (random access)
+
+calculations for root node:
+
+7 0 4 0 0 1 (12)         <- class numeric values to count dictionary with total count at the back (random access)
+
+0.54166			 <- Gini index impurity calculation
+
+1.28067			 <- Shannon entropy impurity calculation
+
