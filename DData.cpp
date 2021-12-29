@@ -7,12 +7,21 @@ void DData::loadFromCSV(const std::string& _fileName)
     std::string line;
     std::string token;
 
+    unsigned int featureIndex = 0;
+
 
     ifile >> line;
     std::istringstream iss(line);
 
     while (std::getline(iss, token, ';'))
+    {
         colNames.push_back(token);
+        featureIndices.push_back(featureIndex++);
+    }
+    
+    //pop two: one for id, one for class
+    featureIndices.pop_back();
+    featureIndices.pop_back();
 
     line.clear();
     iss.clear();
@@ -31,21 +40,26 @@ void DData::loadFromCSV(const std::string& _fileName)
         
     }
 
+
     ifile.close();
+
+    isLoaded = !samples.empty();
 
 }
 
 void DData::enumerateUnordered()
 {
-    if (samples.empty())  
+    if (!isLoaded)  
         return;
        
+    
+    unsigned int featureIndex = 0;
+    //getFeatureCount() + 1, because we want to enumerate the target class at the back of the vector
+    unsigned int featureCount = samples[featureIndex].getFeatureCount() + 1;
+    
 
-    unsigned int featureIndex = 0;   
+    
     std::vector<DSample>::iterator it = samples.begin();
-
-    unsigned int featureCount = (*it).getFeatures().size();
-
 
     for (featureIndex; featureIndex < featureCount; featureIndex++)
     {
@@ -106,6 +120,11 @@ const std::vector<std::string>& DData::getColNames() const
     return colNames;
 }
 
+const std::vector<unsigned int>& DData::getFeatureIndices() const
+{
+    return featureIndices;
+}
+
 int DData::getSampleSize() const
 {
     return samples.size();
@@ -113,6 +132,12 @@ int DData::getSampleSize() const
 
 const DSample& DData::operator[](unsigned int index)const
 {
+    if (!isLoaded)
+    {
+        std::cerr << "Data was not loaded into DData object!";
+        exit(1);
+    }
+
     if (index > samples.size() - 1 || index < 0 || samples.empty())
     {
         std::cerr << "Out of bounds index in DData.samples array!";
@@ -125,6 +150,9 @@ const DSample& DData::operator[](unsigned int index)const
 void DData::addSample(const DSample& sample)
 {
 
+    if (!isLoaded)
+        return;
+
     samples.push_back(sample);
 
     std::ofstream ofile(fileName, std::ios_base::app);
@@ -135,6 +163,9 @@ void DData::addSample(const DSample& sample)
 
 void DData::saveInside(const std::string& outputFileName) const
 {
+    if (!isLoaded)
+        return;
+
     std::ofstream ofile(outputFileName);
 
     std::vector<std::string>::const_iterator it1;
@@ -151,59 +182,79 @@ void DData::saveInside(const std::string& outputFileName) const
     ofile.close();
 }
 
-void DData::generateFeatureIndices(std::vector<unsigned int>& featureIndices, std::function<unsigned int(unsigned int)> featureFunc) const
+void DData::generateFeatureIndices(std::vector<unsigned int>& randomFeatureIndices, std::function<unsigned int(unsigned int)> featureFunc) const
 {
-    if (samples.empty())
+    if (samples.empty() || featureIndices.empty() || !isLoaded)
         return;
 
  
-    unsigned int originalFeatureCount = (*this)[0].getFeatureCount();
+    unsigned int originalFeatureCount = featureIndices.size();
     unsigned int mutatedFeatureCount = featureFunc(originalFeatureCount);
 
-    featureIndices = std::vector<unsigned int>(originalFeatureCount);
-
-    //fill featureIndices with valid indices - range(0,.., featureCount-1)
-    std::iota(featureIndices.begin(), featureIndices.end(), 0);
+    
 
     //if mutated =/= original
     if (mutatedFeatureCount < originalFeatureCount)
     {
-        //randomly pick and place mutatedFeatureCount elements at the front of featureIndices
-        random_unique(featureIndices.begin(), featureIndices.end(), mutatedFeatureCount);
+        //make sure the vector is clean
+        randomFeatureIndices.clear();
 
-        //remove and free the memory for the indices that we dont need
-        featureIndices.erase(featureIndices.begin() + mutatedFeatureCount, featureIndices.end());
+        //allocate shuffling space by filling vector with original indices
+        randomFeatureIndices.assign(featureIndices.begin(), featureIndices.end());
+
+        //randomly pick and place mutatedFeatureCount elements at the front of randomFeatureIndices
+        //*automatically stops shuffling after mutatedFeatureCount random elements are placed
+        random_unique(randomFeatureIndices.begin(), randomFeatureIndices.end(), mutatedFeatureCount);
+
+        //remove and free the memory for the indices that we dont need (which we did not pick)
+        randomFeatureIndices.erase(randomFeatureIndices.begin() + mutatedFeatureCount, randomFeatureIndices.end());
     }
     
     
 }
 
 
-void DData::generateSampleIndices(std::vector<unsigned int>& sampleIndices, std::vector<double>& sampleWeights) const
+void DData::generateSampleIndices(std::vector<unsigned int>& sampleIndices, std::vector<double>& sampleWeights, bool bootstrappigAllowed) const
 {
-    if (samples.empty())
+    if (!isLoaded || samples.empty())
         return;
 
-
-    std::random_device randomDevice;
-    std::mt19937 randomGenerator(randomDevice());
-    std::uniform_int_distribution<> uniformDistirbution(0, samples.size() - 1);
-
-    std::set<unsigned int> uniqueSampleIndices;
 
     sampleIndices.clear();
     sampleWeights.clear();
 
-    sampleWeights = std::vector<double>(samples.size());
-
-    for (std::vector<DSample>::const_iterator it = samples.begin(); it != samples.end(); it++)
+    if (bootstrappigAllowed)
     {
-        unsigned int generatedIndex = uniformDistirbution(randomGenerator);
+        std::random_device randomDevice;
+        std::mt19937 randomGenerator(randomDevice());
+        std::uniform_int_distribution<> uniformDistirbution(0, samples.size() - 1);
 
-        uniqueSampleIndices.insert(generatedIndex);
-        sampleWeights[generatedIndex]++;
+        std::set<unsigned int> uniqueSampleIndices;
+
+        sampleWeights = std::vector<double>(samples.size());
+
+        unsigned int generatedIndex = 0;
+
+        for (std::vector<DSample>::const_iterator it = samples.begin(); it != samples.end(); it++)
+        {
+            generatedIndex = uniformDistirbution(randomGenerator);
+
+            uniqueSampleIndices.insert(generatedIndex);
+            sampleWeights[generatedIndex]++;
+        }
+
+        sampleIndices.assign(uniqueSampleIndices.begin(), uniqueSampleIndices.end());
     }
+    else
+    {
+        unsigned int sampleIndex = 0;
+        const double sampleWeight = 1.0;
 
-    sampleIndices.assign(uniqueSampleIndices.begin(), uniqueSampleIndices.end());
+        for (std::vector<DSample>::const_iterator it = samples.begin(); it != samples.end(); it++)
+        {
+            sampleIndices.push_back(sampleIndex++);
+            sampleWeights.push_back(sampleWeight);
+        }
+    }
         
 }
