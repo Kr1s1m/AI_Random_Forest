@@ -36,7 +36,7 @@ public:
     void addSample(const DSample&);
     void saveInside(const std::string&) const;
 
-    void generateFeatureIndices(std::vector<unsigned int>&, std::function<unsigned int(unsigned int)>);
-    void generateSampleIndices(std::set<unsigned int>&, std::vector<double>&);
+    void generateFeatureIndices(std::vector<unsigned int>&, std::function<unsigned int(unsigned int)>)const;
+    void generateSampleIndices(std::vector<unsigned int>&, std::vector<double>&)const;
 
 };

@@ -151,7 +151,7 @@ void DData::saveInside(const std::string& outputFileName) const
     ofile.close();
 }
 
-void DData::generateFeatureIndices(std::vector<unsigned int>& featureIndices, std::function<unsigned int(unsigned int)> featureFunc)
+void DData::generateFeatureIndices(std::vector<unsigned int>& featureIndices, std::function<unsigned int(unsigned int)> featureFunc) const
 {
     if (samples.empty())
         return;
@@ -179,7 +179,7 @@ void DData::generateFeatureIndices(std::vector<unsigned int>& featureIndices, st
 }
 
 
-void DData::generateSampleIndices(std::set<unsigned int>& sampleIndices, std::vector<double>& sampleWeights)
+void DData::generateSampleIndices(std::vector<unsigned int>& sampleIndices, std::vector<double>& sampleWeights) const
 {
     if (samples.empty())
         return;
@@ -189,6 +189,7 @@ void DData::generateSampleIndices(std::set<unsigned int>& sampleIndices, std::ve
     std::mt19937 randomGenerator(randomDevice());
     std::uniform_int_distribution<> uniformDistirbution(0, samples.size() - 1);
 
+    std::set<unsigned int> uniqueSampleIndices;
 
     sampleIndices.clear();
     sampleWeights.clear();
@@ -199,8 +200,10 @@ void DData::generateSampleIndices(std::set<unsigned int>& sampleIndices, std::ve
     {
         unsigned int generatedIndex = uniformDistirbution(randomGenerator);
 
-        sampleIndices.insert(generatedIndex);
+        uniqueSampleIndices.insert(generatedIndex);
         sampleWeights[generatedIndex]++;
     }
+
+    sampleIndices.assign(uniqueSampleIndices.begin(), uniqueSampleIndices.end());
         
 }
