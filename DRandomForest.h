@@ -13,6 +13,7 @@ private:
 
 	bool bootstrappingAllowed;
 	bool regression;
+	bool isTrained;
 
 public:
 
