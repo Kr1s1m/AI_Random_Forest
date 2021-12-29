@@ -19,6 +19,7 @@ public:
     unsigned int getFeatureCount()const;
     const std::vector<DValue>& getFeatures()const;
     const DValue& getTargetClass()const;
+    double getTargetClassNumericValue()const;
 
     const DValue& operator[](unsigned int) const;
 

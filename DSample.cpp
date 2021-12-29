@@ -39,6 +39,11 @@ const DValue& DSample::getTargetClass() const
     return features.back();
 }
 
+double DSample::getTargetClassNumericValue() const
+{
+    return getTargetClass().getNumericValue();
+}
+
 const DValue& DSample::operator[](unsigned int index) const
 {
     if (index > features.size() - 1 || index < 0 || features.empty())
