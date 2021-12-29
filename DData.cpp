@@ -1,14 +1,16 @@
 #include "DData.h"
 
-void DData::loadFromCSV(const std::string& _fileName)
+void DData::loadFromCSV(const std::string& _fileName, unsigned int maxSamples)
 {
+
     std::ifstream ifile(_fileName);
+    unsigned int totalSamplesLoaded = 0;
 
     std::string line;
     std::string token;
 
     unsigned int featureIndex = 0;
-
+    
 
     ifile >> line;
     std::istringstream iss(line);
@@ -26,7 +28,7 @@ void DData::loadFromCSV(const std::string& _fileName)
     line.clear();
     iss.clear();
 
-    while (ifile >> line)
+    while (totalSamplesLoaded < maxSamples && ifile >> line)
     {
         DSample sample;
 
@@ -34,6 +36,7 @@ void DData::loadFromCSV(const std::string& _fileName)
         iss >> sample;
 
         samples.push_back(sample);
+        totalSamplesLoaded++;
 
         line.clear();
         iss.clear();
@@ -96,11 +99,11 @@ void DData::enumerateUnordered()
 
 }
 
-DData::DData(const std::string& _fileName)
+DData::DData(const std::string& _fileName, unsigned int _maxSamples)
 {
     fileName = _fileName;
 
-    loadFromCSV(_fileName);
+    loadFromCSV(_fileName, _maxSamples);
     enumerateUnordered();
     
 }

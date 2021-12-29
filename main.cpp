@@ -5,7 +5,7 @@
 int main()
 {
     
-    DData trainingData("fruit training set.csv");
+    DData trainingData("fruit training set.csv", 7);
 
     DTree dtree;
 

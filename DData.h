@@ -22,12 +22,12 @@ private:
 
     bool isLoaded;
 
-    void loadFromCSV(const std::string&);
+    void loadFromCSV(const std::string&, unsigned);
     void enumerateUnordered();
 
 public:
 
-    DData(const std::string&);
+    DData(const std::string&, unsigned int);
 
     const std::string& getFileName()const;
     const std::vector<DSample>& getSamples()const;
