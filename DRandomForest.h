@@ -12,6 +12,7 @@ private:
 	std::vector<DTree> decisionTrees;
 
 	bool bootstrappingAllowed;
+	bool regression;
 
 public:
 
