@@ -23,6 +23,8 @@ private:
     double impurityThreshold;
     double strength;
 
+    bool bootstrappingAllowed;
+    bool regression;
     bool isTrained;
 
     ImpurityFunctor impurityFunction;
@@ -36,6 +38,7 @@ private:
 public:
 
     DTree(unsigned int = 4, unsigned int = 1, unsigned int = 1, double = -1.0,
+          bool = true, bool = false,
           ImpurityFunctor = calculateGiniIndex, FeatureFunctor = squareRoot);
 
 
