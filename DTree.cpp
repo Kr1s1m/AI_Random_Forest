@@ -31,8 +31,9 @@ void DTree::calculateClassCounts(std::vector<unsigned int>& classCounts,
 	std::vector<unsigned int>::const_iterator indexIt = sampleIndices.begin();
 
 	for (indexIt; indexIt != sampleIndices.end(); indexIt++)
-		if (classNumericValue = data[*indexIt].getTargetClass().getNumericValue() > maxClassNumericValue)
+	    if ((classNumericValue = data[*indexIt].getTargetClassNumericValue()) > maxClassNumericValue)
 			maxClassNumericValue = classNumericValue;
+		
 
 	classCounts.clear();
 	classCounts.resize((unsigned int)(++maxClassNumericValue));
@@ -41,7 +42,7 @@ void DTree::calculateClassCounts(std::vector<unsigned int>& classCounts,
 
 	for (indexIt; indexIt != sampleIndices.end(); indexIt++)
 	{
-		classNumericValue = data[*indexIt].getTargetClass().getNumericValue();
+		classNumericValue = data[*indexIt].getTargetClassNumericValue();
 		classCounts[(unsigned int)classNumericValue] += sampleWeights[*indexIt];
 
 		totalSamples += sampleWeights[*indexIt];
@@ -53,8 +54,54 @@ void DTree::calculateClassCounts(std::vector<unsigned int>& classCounts,
 }
 
 
-void DTree::fit(const DData&)
+void DTree::fit(const DData& data)
 {
+	std::vector<unsigned int> sampleIndices;
+	std::vector<double> sampleWeights;
+
+	std::vector<unsigned int> featureIndices;
+
+	std::vector<unsigned int> classCounts;
+
+	data.generateSampleIndices(sampleIndices, sampleWeights);
+	data.generateFeatureIndices(featureIndices, squareRoot);
+
+	calculateClassCounts(classCounts, data, sampleIndices, sampleWeights);
+
+
+	/*
+	
+	std::cout << data.getSampleSize() << '\n';
+
+	std::cout << data[0].getFeatureCount() << '\n';
+
+	std::cout << squareRoot(data[0].getFeatureCount()) << '\n';
+
+	for(auto x : featureIndices)
+		std::cout << x << ' ';
+
+	std::cout << '\n';
+
+	for (auto x : sampleIndices)
+		std::cout << x << ' ';
+
+	std::cout << '\n';
+
+	for (auto x : sampleWeights)
+		std::cout << x << ' ';
+
+	std::cout << '\n';
+
+	for (auto x : classCounts)
+		std::cout << x << ' ';
+
+
+	std::cout << '\n';
+
+	std::cout << calculateGiniIndex(classCounts) << '\n';
+	std::cout << calculateShannonEntropy(classCounts) << '\n';
+	*/
+	
 
 
 	isTrained = true;
@@ -62,10 +109,12 @@ void DTree::fit(const DData&)
 
 DValue DTree::classify(const DSample&) const
 {
+	/*
 	if (!isTrained)
 	{
 		return DValue();
 	}
+	*/
 
 
 	return DValue();

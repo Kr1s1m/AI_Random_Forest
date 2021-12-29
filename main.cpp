@@ -5,7 +5,11 @@
 int main()
 {
     
-    //DData trainingData("fruit training set.csv");
+    DData trainingData("fruit training set.csv");
+
+    DTree dtree;
+
+    dtree.fit(trainingData);
 
     //DRandomForest randomForest(100, trainingData);
 
