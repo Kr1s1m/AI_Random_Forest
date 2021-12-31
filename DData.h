@@ -22,7 +22,7 @@ private:
 
     bool isLoaded;
 
-    void loadFromCSV(const std::string&, unsigned);
+    void loadFromCSV(const std::string&, unsigned int);
     void enumerateUnordered();
 
 public:

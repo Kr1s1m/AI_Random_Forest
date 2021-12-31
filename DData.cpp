@@ -4,7 +4,6 @@ void DData::loadFromCSV(const std::string& _fileName, unsigned int maxSamples)
 {
 
     std::ifstream ifile(_fileName);
-    unsigned int totalSamplesLoaded = 0;
 
     std::string line;
     std::string token;
@@ -28,7 +27,7 @@ void DData::loadFromCSV(const std::string& _fileName, unsigned int maxSamples)
     line.clear();
     iss.clear();
 
-    while (totalSamplesLoaded < maxSamples && ifile >> line)
+    while (samples.size() < maxSamples && ifile >> line)
     {
         DSample sample;
 
@@ -36,7 +35,6 @@ void DData::loadFromCSV(const std::string& _fileName, unsigned int maxSamples)
         iss >> sample;
 
         samples.push_back(sample);
-        totalSamplesLoaded++;
 
         line.clear();
         iss.clear();
@@ -66,7 +64,7 @@ void DData::enumerateUnordered()
 
     for (featureIndex; featureIndex < featureCount; featureIndex++)
     {
-        if ((*it)[featureIndex].isOrdered())
+        if ((*it)[featureIndex].isOrdered() && featureIndex < (*it).getFeatureCount())
             continue;
         
         double currentEnumeration = 0.0;
