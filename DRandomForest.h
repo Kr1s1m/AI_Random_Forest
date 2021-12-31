@@ -16,13 +16,19 @@ private:
 	bool regression;
 	bool isTrained;
 
+	double strength;
+
+	void calculateStrength();
+
 public:
 
-	DRandomForest(unsigned int = 100, bool = true, bool = false, bool = false);
+	DRandomForest(unsigned int = 1000, bool = true, bool = false, bool = false);
 
 	void fit(const DData&);
 
 	DValue classify(const DSample&, const DData&)const;
+
+	double getStrength()const;
 
 };
 
