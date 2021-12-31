@@ -21,7 +21,7 @@ DValue::DValue(std::string _string, double _numeric, bool _ordered) :
 
 DValue::DValue()
 {
-    string = "";
+    string = "?";
     numeric = 0.0;
     ordered = false;
 }
