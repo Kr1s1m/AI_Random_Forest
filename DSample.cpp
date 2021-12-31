@@ -46,11 +46,12 @@ double DSample::getTargetClassNumericValue() const
 
 const DValue& DSample::operator[](unsigned int index) const
 {
+   
     if (index > features.size() - 1 || index < 0 || features.empty())
     {
         std::cerr << "Out of bounds index in DSample.features array!";
         exit(1);
-    }
+    }  
 
     return features[index];
 }
