@@ -27,7 +27,7 @@ int main()
 
         results << "prediction: " << prediction.getNumericValue() 
                 << " actual: " << sample.getTargetClassNumericValue() 
-                << " out-of-bag-error" << randomForest.getStrength() 
+                << " out-of-bag-error " << randomForest.getStrength() 
                 << "\n";
     }
 
