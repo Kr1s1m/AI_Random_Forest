@@ -37,6 +37,11 @@ bool DValue::operator==(const DValue& other)const
     return (numeric == other.numeric) && (ordered == other.ordered) && (string == other.string);
 }
 
+bool DValue::operator<(const DValue& other) const
+{
+    return numeric < other.numeric;
+}
+
 DValue& DValue::operator=(const DValue& other) 
 {
     if (this != &other)

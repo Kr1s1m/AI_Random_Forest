@@ -20,6 +20,7 @@ public:
     DValue(const DValue&);
 
     bool operator==(const DValue&)const;
+    bool operator<(const DValue&)const;
     DValue& operator=(const DValue&);
 
     const std::string& getStringValue()const;
