@@ -1,25 +1,25 @@
 #pragma once
 
-#include <unordered_map>
 #include <memory>
 
-class DNode
+struct DNode
 {
-private:
-
-public:
 
     double threshold;
     double impurity;
     double probability;
+    double classNumericValue;
 
+    unsigned int sampleCount;
     unsigned int featureIndex;
     unsigned int depth;
+    
+    bool orderedSplit;
 
     bool isTerminal;
 
-    std::unique_ptr<DNode> left;
-    std::unique_ptr<DNode> right;
+    std::shared_ptr<DNode> left;
+    std::shared_ptr<DNode> right;
 
 
 };
