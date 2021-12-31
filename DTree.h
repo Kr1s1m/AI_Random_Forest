@@ -57,7 +57,7 @@ public:
 
     DTree(unsigned int = 4, unsigned int = 1, unsigned int = 1, double = 0.01,
           bool = true, bool = false,
-          ImpurityFunctor = calculateGiniIndex, FeatureFunctor = squareRoot);
+          ImpurityFunctor = calculateShannonEntropy, FeatureFunctor = squareRoot);
 
     void fit(const DData&);
 
