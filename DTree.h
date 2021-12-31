@@ -57,7 +57,7 @@ private:
 
 public:
 
-    DTree(unsigned int = 7, unsigned int = 1, unsigned int = 1, double = 0.3,
+    DTree(unsigned int = 7, unsigned int = 1, unsigned int = 1, double = 0.01,
           bool = true, bool = false,
           ImpurityFunctor = calculateShannonEntropy, FeatureFunctor = squareRoot);
 
