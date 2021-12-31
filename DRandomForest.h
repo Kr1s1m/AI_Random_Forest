@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DTree.h"
+#include <map>
 
 
 class DRandomForest
@@ -17,11 +18,11 @@ private:
 
 public:
 
-	DRandomForest(unsigned int);
+	DRandomForest(unsigned int = 100, bool = true, bool = false, bool = false);
 
 	void fit(const DData&);
 
-	void classify(const DSample&)const;
+	DValue classify(const DSample&, const DData&)const;
 
 };
 
