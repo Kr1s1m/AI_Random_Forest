@@ -53,17 +53,21 @@ private:
 
     void calculateStrength(const DData&, const std::vector<double>&);
 
+    
+
 public:
 
-    DTree(unsigned int = 4, unsigned int = 1, unsigned int = 1, double = 0.01,
+    DTree(unsigned int = 7, unsigned int = 1, unsigned int = 1, double = 0.3,
           bool = true, bool = false,
           ImpurityFunctor = calculateShannonEntropy, FeatureFunctor = squareRoot);
 
     void fit(const DData&);
 
-    double getStrength(const DData&, std::vector<double>&);
-
     DValue classify(const DSample&, const DData&)const;
+
+    double getStrength()const;
+
+    
 
 };
 

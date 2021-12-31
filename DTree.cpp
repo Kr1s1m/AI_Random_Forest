@@ -45,7 +45,7 @@ void DTree::calculateClassCounts(std::vector<unsigned int>& classCounts,
 	for (indexIt; indexIt != sampleIndices.end(); indexIt++)
 	{
 		classNumericValue = data[*indexIt].getTargetClassNumericValue();
-		classCounts[(unsigned int)classNumericValue] += sampleWeights[*indexIt];
+		classCounts[(unsigned int)classNumericValue] += (unsigned int)sampleWeights[*indexIt];
 
 		totalSamples += sampleWeights[*indexIt];
 	}
@@ -75,6 +75,12 @@ void DTree::calculateMajorityClass(std::pair<double, unsigned int>& majorityClas
 
 void DTree::generateThresholds(std::vector<double>& thresholds, unsigned int featureIndex, const DData& data, const std::vector<unsigned int>& sampleIndices)
 {
+
+	if (sampleIndices.size() < 1)
+		return;
+
+		
+
 	thresholds.clear();
 
 	std::set<double> uniqueThresholds;
@@ -83,7 +89,7 @@ void DTree::generateThresholds(std::vector<double>& thresholds, unsigned int fea
 	for (sampleIt; sampleIt != sampleIndices.end(); sampleIt++)
 		uniqueThresholds.insert(data[*sampleIt][featureIndex].getNumericValue());
 
-	if (data[0][featureIndex].isOrdered())
+	if (data[0][featureIndex].isOrdered() && uniqueThresholds.size() > 1)
 	{
 		
 		std::set<double>::iterator thresholdIt = uniqueThresholds.begin();
@@ -105,6 +111,10 @@ void DTree::generateThresholds(std::vector<double>& thresholds, unsigned int fea
 
 void DTree::splitSampleIndices(unsigned int featureIndex, double threshold, const DData& data, const std::vector<unsigned int>& sampleIndices, std::vector<unsigned int>& leftIndices, std::vector<unsigned int>& rightIndices)
 {
+
+	if (sampleIndices.size() < 2)
+		return;
+
 	leftIndices.clear();
 	rightIndices.clear();
 
@@ -134,6 +144,7 @@ Split DTree::findBestSplit(double parentImpurity, const DData& data, const std::
 	std::vector<unsigned int> featureIndices;
 	data.generateFeatureIndices(featureIndices, featureFunction);
 
+
 	std::vector<unsigned int> leftIndices, leftClassCounts;
 	std::vector<unsigned int> rightIndices, rightClassCounts;
 
@@ -145,6 +156,7 @@ Split DTree::findBestSplit(double parentImpurity, const DData& data, const std::
 	Split current, best;
 
 	best.gain = std::numeric_limits<double>::lowest();
+	best.featureIndex = 0;
 
 	std::vector<unsigned int>::const_iterator featureIt = featureIndices.begin();
 	std::vector<double>::const_iterator thresholdIt = thresholds.begin();
@@ -160,6 +172,10 @@ Split DTree::findBestSplit(double parentImpurity, const DData& data, const std::
 		{
 			current.threshold = *thresholdIt;
 			splitSampleIndices(current.featureIndex, current.threshold, data, sampleIndices, leftIndices, rightIndices);
+
+			if (leftIndices.empty() || rightIndices.empty())
+				continue;
+
 			calculateClassCounts(leftClassCounts, data, leftIndices, sampleWeights);
 			calculateClassCounts(rightClassCounts, data, rightIndices, sampleWeights);
 
@@ -198,7 +214,7 @@ Split DTree::findBestSplit(double parentImpurity, const DData& data, const std::
 std::shared_ptr<DNode> DTree::createNode(unsigned int depth, double impurity, unsigned int sampleCount, double classNumericValue, double probability)
 {
 
-	std::shared_ptr<DNode> node(new DNode());
+	std::shared_ptr<DNode> node = std::make_shared<DNode>();
 
 	node->depth = depth;
 	node->sampleCount = sampleCount;
@@ -230,6 +246,8 @@ void DTree::buildTree(const DData& data, const std::vector<unsigned int>& sample
 		std::pair<std::shared_ptr<DNode>, std::vector<unsigned int>> currentNode = nodes.top();
 		nodes.pop();
 
+		if (currentNode.second.empty())
+			continue;
 		
 		if (currentNode.first->depth == maxDepth ||
 			currentNode.first->impurity < impurityThreshold ||
@@ -280,6 +298,8 @@ void DTree::fit(const DData& data)
 	buildTree(data, sampleIndices, sampleWeights);
 
 	isTrained = true;
+
+	calculateStrength(data, sampleWeights);
 }
 
 DValue DTree::classify(const DSample& sample, const DData& data) const
@@ -309,6 +329,7 @@ DValue DTree::classify(const DSample& sample, const DData& data) const
 		}
 	}
 
+	/*
 	std::vector<DSample>::const_iterator sampleIt = data.getSamples().begin();
 
 	for (sampleIt; sampleIt != data.getSamples().end(); sampleIt++)
@@ -316,8 +337,9 @@ DValue DTree::classify(const DSample& sample, const DData& data) const
 		if (sampleIt->getTargetClassNumericValue() == current->classNumericValue)
 			return sampleIt->getTargetClass();
 	}
+	*/
 
-	return DValue();
+	return DValue(current->classNumericValue);
 }
 
 
@@ -337,7 +359,7 @@ void DTree::calculateStrength(const DData& data, const std::vector<double>& samp
 		if (sampleWeights[sampleIndex] > 0.0)
 			continue;
 
-		if (classify(data[sampleIndex], data) == data[sampleIndex].getTargetClass())
+		if (classify(data[sampleIndex], data) == data[sampleIndex].getTargetClassNumericValue())
 			correctClassifications++;
 
 		totalClassifications++;
@@ -347,10 +369,9 @@ void DTree::calculateStrength(const DData& data, const std::vector<double>& samp
 }
 
 
-double DTree::getStrength(const DData& data, std::vector<double>& sampleWeights)
+double DTree::getStrength() const
 {
-	if (strength == -1.0 && isTrained)
-		calculateStrength(data, sampleWeights);
 
 	return strength;
 }
+
