@@ -22,7 +22,7 @@ private:
 
 public:
 
-	DRandomForest(unsigned int = 1000, bool = true, bool = false, bool = false);
+	DRandomForest(unsigned int = 200, bool = true, bool = false, bool = false);
 
 	void fit(const DData&);
 
