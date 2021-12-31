@@ -1,77 +1,18 @@
 #include "DRandomForest.h"
 
-
+const unsigned int MAX_SAMPLES = 10000;
 
 int main()
 {
     
-    DData trainingData("fruit training set.csv", 7);
+    DData trainingData("fruit training set.csv", MAX_SAMPLES);
 
     DTree dtree;
 
     dtree.fit(trainingData);
 
-    //DRandomForest randomForest(100, trainingData);
-
-    /*
-    for (unsigned int i = 0; i < trainingData.getSampleSize(); i++)
-        std::cout << trainingData[i][1].getStringValue() << " "
-        << trainingData[i][1].getNumericValue() << "\n";
-
-    std::cout << "\n";
-    std::cout << "\n";
-
-    for (unsigned int i = 0; i < trainingData.getSampleSize(); i++)
-        std::cout << trainingData[i][3].getStringValue() << " "
-        << trainingData[i][3].getNumericValue() << "\n";
-
-    std::cout << "\n";
-    std::cout << "\n";
-
-    for (unsigned int i = 0; i < trainingData.getSampleSize(); i++)
-        std::cout << trainingData[i][4].getStringValue() << " "
-        << trainingData[i][4].getNumericValue() << "\n";
-
-    */
-
-    
-    /*
-    std::vector<unsigned int> kek;
-
-    trainingData.generateFeatureIndices(kek, [](unsigned int x){return (unsigned int)std::sqrt(x);});
-
-    unsigned int featureCount = trainingData[0].getFeatureCount();
-    std::cout << featureCount << '\n';
-
-    featureCount = (unsigned int)std::sqrt(featureCount);
-    std::cout << featureCount << '\n';
-
-    for (unsigned int i = 0; i < kek.size(); i++)
-        std::cout << kek[i] << " ";
-    std::cout << '\n';
-    
-    std::set<unsigned int> lmao;
-    std::vector<double> lmaow;
-
-    trainingData.generateSampleIndices(lmao, lmaow);
-
-    for (auto l : lmao)
-        std::cout << l << " ";
-
-    std::cout << '\n';
-
-    for (unsigned int i = 0; i < lmaow.size(); i++)
-        std::cout << lmaow[i] << " ";
-    */
-    
-    /*
-    std::vector<unsigned int> classCounts = { 7, 0, 4, 0, 0, 1, 12 };
-
-    std::cout << calculateGiniIndex(classCounts) << '\n';
-    std::cout << calculateShannonEntropy(classCounts) << '\n';
-    */
-    
-    
+    DValue prediction = dtree.classify(DSample(12, { DValue(47.1345), DValue(1.0), DValue(7653.831), DValue(1.0), DValue("?") }), trainingData);
+    std::cout << prediction;
 
     return 0;
 

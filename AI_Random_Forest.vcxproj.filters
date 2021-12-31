@@ -45,6 +45,9 @@
     <ClCompile Include="DRandomForest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Split.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DSample.h">
@@ -72,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DRandomForest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Split.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
