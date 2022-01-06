@@ -12,7 +12,7 @@ maxDepth(_maxDepth), minSamplesPerSplit(_minSamplesPerSplit), minSamplesPerLeaf(
 impurityThreshold(_impurityThreshold), 
 bootstrappingAllowed(_bootstrappingAllowed), regression(_regression), 
 impurityFunction(_impurityFunction), featureFunction(_featureFunction),
-isTrained(false), outOfBagError(-1.0)
+isTrained(false), outOfBagError(100.0)
 {
 	
 }
@@ -20,9 +20,7 @@ isTrained(false), outOfBagError(-1.0)
 void DTree::calculateClassCounts(std::vector<unsigned int>& classCounts,
 								 const DData& data, 
 								 const std::vector<unsigned int>& sampleIndices,
-	                             const std::vector<double>& sampleWeights
-								)const
-
+	                             const std::vector<double>& sampleWeights)const
 {
 	double totalSamples = 0.0;
 
@@ -55,7 +53,8 @@ void DTree::calculateClassCounts(std::vector<unsigned int>& classCounts,
 
 }
 
-void DTree::calculateMajorityClass(std::pair<double, unsigned int>& majorityClass, const std::vector<unsigned int>& classCounts) const
+void DTree::calculateMajorityClass(std::pair<double, unsigned int>& majorityClass, 
+								   const std::vector<unsigned int>& classCounts)const
 {
 	unsigned int maxClassCount = 0;
 	unsigned int mostCommonClassValue = 0;
@@ -73,7 +72,10 @@ void DTree::calculateMajorityClass(std::pair<double, unsigned int>& majorityClas
 	majorityClass.second = maxClassCount;
 }
 
-void DTree::generateThresholds(std::vector<double>& thresholds, unsigned int featureIndex, const DData& data, const std::vector<unsigned int>& sampleIndices)
+void DTree::generateThresholds(std::vector<double>& thresholds,
+							   unsigned int featureIndex,
+							   const DData& data, 
+							   const std::vector<unsigned int>& sampleIndices)
 {
 
 	if (sampleIndices.size() < 1)
@@ -109,14 +111,17 @@ void DTree::generateThresholds(std::vector<double>& thresholds, unsigned int fea
 	
 }
 
-void DTree::splitSampleIndices(unsigned int featureIndex, double threshold, const DData& data, const std::vector<unsigned int>& sampleIndices, std::vector<unsigned int>& leftIndices, std::vector<unsigned int>& rightIndices)
+void DTree::splitSampleIndices(unsigned int featureIndex, double threshold,
+							   const DData& data, const std::vector<unsigned int>& sampleIndices,
+							   std::vector<unsigned int>& leftIndices,
+							   std::vector<unsigned int>& rightIndices)
 {
-
-	if (sampleIndices.size() < 2)
-		return;
 
 	leftIndices.clear();
 	rightIndices.clear();
+
+	if (sampleIndices.size() < 2)
+		return;
 
 	std::vector<unsigned int>::const_iterator sampleIt = sampleIndices.begin();
 
@@ -139,7 +144,10 @@ void DTree::splitSampleIndices(unsigned int featureIndex, double threshold, cons
 
 }
 
-Split DTree::findBestSplit(double parentImpurity, const DData& data, const std::vector<unsigned int>& sampleIndices, const std::vector<double>& sampleWeights)
+Split DTree::findBestSplit(double parentImpurity,
+						   const DData& data, 
+						   const std::vector<unsigned int>& sampleIndices,
+						   const std::vector<double>& sampleWeights)
 {
 	std::vector<unsigned int> featureIndices;
 	data.generateFeatureIndices(featureIndices, featureFunction);
@@ -194,7 +202,12 @@ Split DTree::findBestSplit(double parentImpurity, const DData& data, const std::
 			current.leftProbability = (double)leftMajorityClass.second / leftClassCounts.back();
 			current.rightProbability = (double)rightMajorityClass.second / rightClassCounts.back();
 
-			current.gain = parentImpurity - current.leftProbability*current.leftImpurity - current.rightProbability*current.rightImpurity;
+			double parentSampleCount = (double)current.leftSampleCount + (double)current.rightSampleCount;
+
+			double impurityCoeffLeft = (double)current.leftSampleCount / parentSampleCount;
+			double impurityCoeffRight = (double)current.rightSampleCount / parentSampleCount;
+
+			current.gain = parentImpurity - impurityCoeffLeft*current.leftImpurity - impurityCoeffRight*current.rightImpurity;
 
 			if (current.gain > best.gain)
 			{
@@ -211,7 +224,11 @@ Split DTree::findBestSplit(double parentImpurity, const DData& data, const std::
 }
 
 
-std::shared_ptr<DNode> DTree::createNode(unsigned int depth, double impurity, unsigned int sampleCount, double classNumericValue, double probability)
+std::shared_ptr<DNode> DTree::createNode(unsigned int depth,
+										 unsigned int sampleCount,
+										 double impurity,
+										 double classNumericValue,
+										 double probability)
 {
 
 	std::shared_ptr<DNode> node = std::make_shared<DNode>();
@@ -226,7 +243,9 @@ std::shared_ptr<DNode> DTree::createNode(unsigned int depth, double impurity, un
 	return node;
 }
 
-void DTree::buildTree(const DData& data, const std::vector<unsigned int>& sampleIndices, const std::vector<double>& sampleWeights)
+void DTree::buildTree(const DData& data,
+					  const std::vector<unsigned int>& sampleIndices,
+					  const std::vector<double>& sampleWeights)
 {
 
 	std::stack<std::pair<std::shared_ptr<DNode>, std::vector<unsigned int>>> nodes;
@@ -237,7 +256,11 @@ void DTree::buildTree(const DData& data, const std::vector<unsigned int>& sample
 	calculateClassCounts(classCounts, data, sampleIndices, sampleWeights);
 	calculateMajorityClass(majorityClass, classCounts);
 
-	root = createNode(0, impurityFunction(classCounts), classCounts.back(), majorityClass.first, (double)majorityClass.second/classCounts.back());
+	root = createNode(0,
+					  classCounts.back(),
+					  impurityFunction(classCounts),
+					  majorityClass.first,
+					  (double)majorityClass.second/classCounts.back());
 
 	nodes.push({ root, sampleIndices });
 
@@ -268,8 +291,17 @@ void DTree::buildTree(const DData& data, const std::vector<unsigned int>& sample
 			continue;
 		}
 
-		std::shared_ptr<DNode> leftChild = createNode(currentNode.first->depth + 1, best.leftImpurity, best.leftSampleCount, best.leftClassNumericValue, best.leftProbability);
-		std::shared_ptr<DNode> rightChild = createNode(currentNode.first->depth + 1, best.rightImpurity, best.rightSampleCount, best.rightClassNumericValue, best.rightProbability);
+		std::shared_ptr<DNode> leftChild = createNode(currentNode.first->depth + 1,
+													  best.leftSampleCount,
+													  best.leftImpurity,
+													  best.leftClassNumericValue,
+													  best.leftProbability);
+
+		std::shared_ptr<DNode> rightChild = createNode(currentNode.first->depth + 1,
+													   best.rightSampleCount,
+													   best.rightImpurity,
+													   best.rightClassNumericValue,
+													   best.rightProbability);
 
 
 		currentNode.first->featureIndex = best.featureIndex;
