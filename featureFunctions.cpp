@@ -20,12 +20,12 @@ unsigned int cubeRoot(unsigned int featureCount)
 	return (unsigned int)std::cbrt(featureCount);
 }
 
-unsigned int log2(unsigned int featureCount)
+unsigned int lg2(unsigned int featureCount)
 {
 	return (unsigned int)std::log2(featureCount);
 }
 
-unsigned int log10(unsigned int featureCount)
+unsigned int lg10(unsigned int featureCount)
 {
 	return (unsigned int)std::log10(featureCount);
 }
