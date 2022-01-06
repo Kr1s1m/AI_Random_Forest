@@ -47,7 +47,7 @@ private:
 
     void splitSampleIndices(unsigned int, double, const DData&, const std::vector<unsigned int>&, std::vector<unsigned int>&, std::vector<unsigned int>&);
 
-    std::shared_ptr<DNode> createNode(unsigned int, double, unsigned int, double, double);
+    std::shared_ptr<DNode> createNode(unsigned int, unsigned int, double, double, double);
 
     void buildTree(const DData&, const std::vector<unsigned int>&, const std::vector<double>&);
 
