@@ -2,8 +2,8 @@
 
 4			 <- featureCount
 2			 <- f(featureCount)
-1 2			 <- random f(featureCount) feature indices
-0 2 3 4 5 8		 <- bootstrapped set of sample indices
+1 2			 <- random f(featureCount) feature indices - this is generated when building each node of each tree
+0 2 3 4 5 8		 <- bootstrapped set of sample indices - this is generated for each tree
 5 0 2 2 1 1 0 0 1 0 0 0	 <- bootstrap index to weight dictionary (random access)
 
 root node calculations:
