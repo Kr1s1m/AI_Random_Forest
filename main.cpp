@@ -2,8 +2,8 @@
 
 const unsigned int MAX_SAMPLES = 300;
 
-const unsigned int DTREE_COUNT = 10000;
-const unsigned int MAX_DEPTH = 50;
+const unsigned int DTREE_COUNT = 200;
+const unsigned int MAX_DEPTH = 10;
 const unsigned int MIN_SPLIT = 1;
 const unsigned int MIN_LEAF = 1;
 
