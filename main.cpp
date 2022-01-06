@@ -1,16 +1,18 @@
 #include "DRandomForest.h"
 
-const unsigned int MAX_SAMPLES = 300;
+const unsigned int MAX_SAMPLES = 256;
 
-const unsigned int DTREE_COUNT = 200;
-const unsigned int MAX_DEPTH = 10;
+const unsigned int DTREE_COUNT = 100;
+const unsigned int MAX_DEPTH = 9;
 const unsigned int MIN_SPLIT = 1;
 const unsigned int MIN_LEAF = 1;
 
-const double IMPURITY_THRESHOLD = 0.005;
+const double IMPURITY_THRESHOLD = 0.01;
+const double OUT_OF_BAG_ERROR_THRESHOLD = 0.0050;
 
 const bool BOOTSTRAPPING_ALLOWED = true;
 const bool REGRESSION = false;
+const bool MILTITHREAD = true;
 
 const ImpurityFunctor IMPURITY_FUNCTION = calculateShannonEntropy;
 const FeatureFunctor FEATURE_FUNCTION = squareRoot;
@@ -26,7 +28,7 @@ int main()
     DRandomForest randomForest(
                                DTREE_COUNT, MAX_DEPTH, MIN_SPLIT, MIN_LEAF, 
                                IMPURITY_THRESHOLD,
-                               BOOTSTRAPPING_ALLOWED, REGRESSION,
+                               BOOTSTRAPPING_ALLOWED, REGRESSION, MILTITHREAD,
                                IMPURITY_FUNCTION, 
                                FEATURE_FUNCTION
                               );
@@ -37,6 +39,15 @@ int main()
     //object interface use
 
     randomForest.fit(trainingData);
+
+    /*
+    while (randomForest.getOutOfBagError() > OUT_OF_BAG_ERROR_THRESHOLD)
+    {
+        randomForest.reset();
+        randomForest.fit(trainingData);
+    }
+    */
+    
     randomForest.classifyBatch(testData);
 
     return 0;
