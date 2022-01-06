@@ -7,7 +7,7 @@
 #include "impurityFunctions.h"
 #include "featureFunctions.h"
 
-#include<stack>
+#include <stack>
 
 
 using ImpurityFunctor = std::function<double(const std::vector<unsigned int>&)>;
@@ -36,19 +36,15 @@ private:
     
 
 
-    void calculateClassCounts(std::vector<unsigned int>&, const DData&,
-                              const std::vector<unsigned int>&, const std::vector<double>&)const;
-
+    void calculateClassCounts(std::vector<unsigned int>&, const DData&, const std::vector<unsigned int>&, const std::vector<double>&)const;
     void calculateMajorityClass(std::pair<double, unsigned int>&, const std::vector<unsigned int>&)const;
 
-    DSplit findBestSplit(double, const DData&, const std::vector<unsigned int>&, const std::vector<double>&);
+    void generateThresholds(std::vector<double>&, unsigned int, const DData&, const std::vector<unsigned int>&)const;
+    void splitSampleIndices(unsigned int, double, const DData&, const std::vector<unsigned int>&, std::vector<unsigned int>&, std::vector<unsigned int>&)const;
 
-    void generateThresholds(std::vector<double>&, unsigned int, const DData&, const std::vector<unsigned int>&);
-
-    void splitSampleIndices(unsigned int, double, const DData&, const std::vector<unsigned int>&, std::vector<unsigned int>&, std::vector<unsigned int>&);
+    DSplit findBestSplit(double, const DData&, const std::vector<unsigned int>&, const std::vector<double>&)const;
 
     std::shared_ptr<DNode> createNode(unsigned int, unsigned int, double, double, double);
-
     void buildTree(const DData&, const std::vector<unsigned int>&, const std::vector<double>&);
 
     void calculateOutOfBagError(const DData&, const std::vector<double>&);

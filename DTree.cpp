@@ -75,7 +75,7 @@ void DTree::calculateMajorityClass(std::pair<double, unsigned int>& majorityClas
 void DTree::generateThresholds(std::vector<double>& thresholds,
 							   unsigned int featureIndex,
 							   const DData& data, 
-							   const std::vector<unsigned int>& sampleIndices)
+							   const std::vector<unsigned int>& sampleIndices)const
 {
 
 	if (sampleIndices.size() < 1)
@@ -114,7 +114,7 @@ void DTree::generateThresholds(std::vector<double>& thresholds,
 void DTree::splitSampleIndices(unsigned int featureIndex, double threshold,
 							   const DData& data, const std::vector<unsigned int>& sampleIndices,
 							   std::vector<unsigned int>& leftIndices,
-							   std::vector<unsigned int>& rightIndices)
+							   std::vector<unsigned int>& rightIndices)const
 {
 
 	leftIndices.clear();
@@ -147,7 +147,7 @@ void DTree::splitSampleIndices(unsigned int featureIndex, double threshold,
 DSplit DTree::findBestSplit(double parentImpurity,
 						   const DData& data, 
 						   const std::vector<unsigned int>& sampleIndices,
-						   const std::vector<double>& sampleWeights)
+						   const std::vector<double>& sampleWeights) const
 {
 	std::vector<unsigned int> featureIndices;
 	data.generateFeatureIndices(featureIndices, featureFunction);
