@@ -158,6 +158,7 @@
     <ClInclude Include="DTree.h" />
     <ClInclude Include="DValue.h" />
     <ClInclude Include="featureFunctions.h" />
+    <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="impurityFunctions.h" />
     <ClInclude Include="DRandomForest.h" />
     <ClInclude Include="random_unique.h" />
