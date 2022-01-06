@@ -11,7 +11,9 @@ void DData::loadFromCSV(const std::string& _fileName, unsigned int maxSamples)
     unsigned int featureIndex = 0;
     
 
-    ifile >> line;
+    //ifile >> line;
+    std::getline(ifile, line);
+
     std::istringstream iss(line);
 
     while (std::getline(iss, token, ';'))
