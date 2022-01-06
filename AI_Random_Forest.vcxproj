@@ -149,7 +149,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="DRandomForest.cpp" />
     <ClCompile Include="random_unique.cpp" />
-    <ClCompile Include="Split.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DData.h" />
@@ -162,7 +161,7 @@
     <ClInclude Include="impurityFunctions.h" />
     <ClInclude Include="DRandomForest.h" />
     <ClInclude Include="random_unique.h" />
-    <ClInclude Include="Split.h" />
+    <ClInclude Include="DSplit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
