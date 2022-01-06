@@ -2,7 +2,7 @@
 
 #include "DData.h"
 #include "DNode.h"
-#include "Split.h"
+#include "DSplit.h"
 
 #include "impurityFunctions.h"
 #include "featureFunctions.h"
@@ -41,7 +41,7 @@ private:
 
     void calculateMajorityClass(std::pair<double, unsigned int>&, const std::vector<unsigned int>&)const;
 
-    Split findBestSplit(double, const DData&, const std::vector<unsigned int>&, const std::vector<double>&);
+    DSplit findBestSplit(double, const DData&, const std::vector<unsigned int>&, const std::vector<double>&);
 
     void generateThresholds(std::vector<double>&, unsigned int, const DData&, const std::vector<unsigned int>&);
 

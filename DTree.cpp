@@ -144,7 +144,7 @@ void DTree::splitSampleIndices(unsigned int featureIndex, double threshold,
 
 }
 
-Split DTree::findBestSplit(double parentImpurity,
+DSplit DTree::findBestSplit(double parentImpurity,
 						   const DData& data, 
 						   const std::vector<unsigned int>& sampleIndices,
 						   const std::vector<double>& sampleWeights)
@@ -161,7 +161,7 @@ Split DTree::findBestSplit(double parentImpurity,
 	std::vector<double> thresholds;
 
 
-	Split current, best;
+	DSplit current, best;
 
 	best.gain = std::numeric_limits<double>::lowest();
 	best.featureIndex = *featureIndices.begin();
@@ -280,7 +280,7 @@ void DTree::buildTree(const DData& data,
 			continue;
 		}
 
-		Split best = findBestSplit(currentNode.first->impurity, data, currentNode.second, sampleWeights);
+		DSplit best = findBestSplit(currentNode.first->impurity, data, currentNode.second, sampleWeights);
 
 		std::vector<unsigned int> leftIndices, rightIndices;
 		splitSampleIndices(best.featureIndex, best.threshold, data, currentNode.second, leftIndices, rightIndices);

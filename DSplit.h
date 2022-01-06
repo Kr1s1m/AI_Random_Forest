@@ -1,5 +1,5 @@
 #pragma once
-struct Split
+struct DSplit
 {
 	unsigned int featureIndex;
 
