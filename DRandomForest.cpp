@@ -70,7 +70,7 @@ void DRandomForest::multiThreadFit(const DData& data)
 void DRandomForest::mainThreadFit(const DData& data)
 {
 
-	for (unsigned int treeIndex = 0; treeIndex != dtreeCount; treeIndex++)
+	for (unsigned int treeIndex = 0; treeIndex < dtreeCount; treeIndex++)
 	{
 		DTree dtree(maxDepth, minSamplesPerSplit, minSamplesPerLeaf, impurityThreshold,
 					bootstrappingAllowed, regression,
