@@ -8,11 +8,11 @@ const unsigned int MIN_SPLIT = 1;
 const unsigned int MIN_LEAF = 1;
 
 const double IMPURITY_THRESHOLD = 0.01;
-const double OUT_OF_BAG_ERROR_THRESHOLD = 0.0050;
+const double OUT_OF_BAG_ERROR_THRESHOLD = 0.0025;
 
 const bool BOOTSTRAPPING_ALLOWED = true;
 const bool REGRESSION = false;
-const bool MILTITHREAD = true;
+const bool MULTITHREAD = true;
 
 const ImpurityFunctor IMPURITY_FUNCTION = calculateShannonEntropy;
 const FeatureFunctor FEATURE_FUNCTION = squareRoot;
@@ -28,7 +28,7 @@ int main()
     DRandomForest randomForest(
                                DTREE_COUNT, MAX_DEPTH, MIN_SPLIT, MIN_LEAF, 
                                IMPURITY_THRESHOLD,
-                               BOOTSTRAPPING_ALLOWED, REGRESSION, MILTITHREAD,
+                               BOOTSTRAPPING_ALLOWED, REGRESSION, MULTITHREAD,
                                IMPURITY_FUNCTION, 
                                FEATURE_FUNCTION
                               );
@@ -47,6 +47,7 @@ int main()
         randomForest.fit(trainingData);
     }
     */
+    
     
     randomForest.classifyBatch(testData);
 
