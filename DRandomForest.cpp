@@ -1,67 +1,132 @@
 #include "DRandomForest.h"
 
 
-DRandomForest::DRandomForest(unsigned int _dtreeCount, bool _bootstrappingAllowed, bool _regression, bool _isTrained):
-	dtreeCount(_dtreeCount), bootstrappingAllowed(_bootstrappingAllowed), isTrained(_isTrained), strength(-1.0)
+DRandomForest::DRandomForest(unsigned int _dtreeCount, unsigned int _maxDepth, unsigned int _minSamplesPerSplit,
+	unsigned int _minSamplesPerLeaf, double _impurityThreshold, bool _bootstrappingAllowed, bool _regression,
+	ImpurityFunctor _impurityFunction, FeatureFunctor _featureFunction):
+
+	dtreeCount(_dtreeCount), maxDepth(_maxDepth), minSamplesPerSplit(_minSamplesPerSplit),
+	minSamplesPerLeaf(_minSamplesPerLeaf), impurityThreshold(_impurityThreshold),
+	bootstrappingAllowed(_bootstrappingAllowed), regression(_regression),
+	isTrained(false), outOfBagError(-1.0),
+	impurityFunction(_impurityFunction), featureFunction(_featureFunction)
 {
-	decisionTrees = std::vector<DTree>(_dtreeCount);
+	decisionTrees = std::vector<DTree>(dtreeCount,
+		DTree(maxDepth, minSamplesPerSplit, minSamplesPerLeaf, impurityThreshold,
+			  bootstrappingAllowed, regression, impurityFunction, featureFunction));
+}
+
+
+void DRandomForest::calculateOutOfBagError()
+{
+	if (!isTrained)
+		return;
+
+	double errorSum = 0.0;
+
+	std::vector<DTree>::const_iterator treeIt = decisionTrees.begin();
+
+	for (treeIt; treeIt != decisionTrees.end(); treeIt++)
+		errorSum += treeIt->getOutOfBagError();
+
+	outOfBagError = errorSum / (double)dtreeCount;
 }
 
 void DRandomForest::fit(const DData& data)
 {
+	unsigned int treeIndex = 0;
+	unsigned int remainingTrees = dtreeCount;
+
 	std::vector<DTree>::iterator treeIt = decisionTrees.begin();
 
 	for (treeIt; treeIt != decisionTrees.end(); treeIt++)
+	{
+		system("cls");
+
+		std::cout << "Fitting tree "         << treeIndex++      
+				  << "\nTrees in fit queue: " << --remainingTrees
+				  << "\n";
+
 		treeIt->fit(data);
+	}
+		
+	system("cls");
+
+	std::cout << "Fitting \"" << data.getFileName() << "\" has finished.\n";
+		      
 
 	isTrained = true;
 
-	calculateStrength();
+	std::cout << "Calculating out-of-bag error for forest...\n";
+
+	calculateOutOfBagError();
+
+	std::cout << "Done.\n"
+	<< "Your random forest is now trained and ready for use!\n\n";
 }
 
-DValue DRandomForest::classify(const DSample& sample, const DData& data) const
+DValue DRandomForest::classify(const DSample& sample) const
 {
-	/*
-	std::vector<DTree>::const_iterator treeIt = decisionTrees.begin();
+	if (!isTrained)
+		return DValue();
 
-	for (treeIt; treeIt != decisionTrees.end(); treeIt++)
-		std::cout << treeIt->classify(sample, data) << '\n';
-
-	return DValue();
-	*/
-
-	
+	double currentClass, mostVotedClass;
+	unsigned int mostVotes = 0;
 	
 	std::unordered_map<unsigned int, unsigned int> votes;
 
 	std::vector<DTree>::const_iterator treeIt = decisionTrees.begin();
 
 	for (treeIt; treeIt != decisionTrees.end(); treeIt++)
-		votes[(unsigned int)treeIt->classify(sample, data).getNumericValue()]++;
+	{
+		currentClass = treeIt->classify(sample).getNumericValue();
 
-	
+		votes[(unsigned int)currentClass]++;
 
-	return std::max_element(votes.begin(), votes.end(), [](const auto& x, const auto& y) {return x.second < y.second; })->first;
+		if (votes[(unsigned int)currentClass] > mostVotes)
+		{
+			mostVotes = votes[(unsigned int)currentClass];
+			mostVotedClass = currentClass;
+		}
+			
+	}
+		
+	return DValue(mostVotedClass);
+
+	//return std::max_element(votes.begin(), votes.end(), [](const auto& x, const auto& y) {return x.second < y.second; })->first;
 	
 	
 }
 
-void DRandomForest::calculateStrength()
+bool DRandomForest::classifyBatch(const DData& testData) const
 {
 	if (!isTrained)
-		return;
+		return false;
 
-	double strengthSum = 0.0;
+	std::string resultsFileName = "results " + std::to_string(time(0)) + ".txt";
+	std::ofstream resultsFile(resultsFileName);
 
-	std::vector<DTree>::const_iterator treeIt = decisionTrees.begin();
+	resultsFile << "Forest total out-of-bag error: " << getOutOfBagError() << "%\n";
 
-	for (treeIt; treeIt != decisionTrees.end(); treeIt++)
-		strengthSum += treeIt->getStrength();
+	std::vector<DSample>::const_iterator testSamplesIt = testData.getSamples().begin();
+	for (testSamplesIt; testSamplesIt != testData.getSamples().end(); testSamplesIt++)
+	{
 
-	strength = strengthSum / (double)dtreeCount;
+		resultsFile << "prediction: " << classify(*testSamplesIt).getNumericValue()  << "\t"
+					<< "actual: "	  << testSamplesIt->getTargetClassNumericValue() << "\n";
+	}
+
+	resultsFile.close();
+
+	std::cout << "Batch \""                << testData.getFileName() << "\" classification complete!\n"
+			  << "Results saved inside \"" << resultsFileName        << "\".\n";
+
+	return true;
+
 }
 
-double DRandomForest::getStrength() const
+
+double DRandomForest::getOutOfBagError() const
 {
-	return strength;
+	return outOfBagError;
 }
