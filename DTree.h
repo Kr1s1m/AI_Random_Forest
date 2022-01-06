@@ -23,9 +23,8 @@ private:
     unsigned int minSamplesPerSplit;
     unsigned int minSamplesPerLeaf;
 
-
     double impurityThreshold;
-    double strength;
+    double outOfBagError;
 
     bool bootstrappingAllowed;
     bool regression;
@@ -35,6 +34,7 @@ private:
     FeatureFunctor featureFunction;
     
     
+
 
     void calculateClassCounts(std::vector<unsigned int>&, const DData&,
                               const std::vector<unsigned int>&, const std::vector<double>&)const;
@@ -51,7 +51,7 @@ private:
 
     void buildTree(const DData&, const std::vector<unsigned int>&, const std::vector<double>&);
 
-    void calculateStrength(const DData&, const std::vector<double>&);
+    void calculateOutOfBagError(const DData&, const std::vector<double>&);
 
     
 
@@ -63,9 +63,9 @@ public:
 
     void fit(const DData&);
 
-    DValue classify(const DSample&, const DData&)const;
+    DValue classify(const DSample&)const;
 
-    double getStrength()const;
+    double getOutOfBagError()const;
 
     
 

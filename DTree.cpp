@@ -12,7 +12,7 @@ maxDepth(_maxDepth), minSamplesPerSplit(_minSamplesPerSplit), minSamplesPerLeaf(
 impurityThreshold(_impurityThreshold), 
 bootstrappingAllowed(_bootstrappingAllowed), regression(_regression), 
 impurityFunction(_impurityFunction), featureFunction(_featureFunction),
-isTrained(false), strength(-1.0)
+isTrained(false), outOfBagError(-1.0)
 {
 	
 }
@@ -156,7 +156,7 @@ Split DTree::findBestSplit(double parentImpurity, const DData& data, const std::
 	Split current, best;
 
 	best.gain = std::numeric_limits<double>::lowest();
-	best.featureIndex = 0;
+	best.featureIndex = *featureIndices.begin();
 
 	std::vector<unsigned int>::const_iterator featureIt = featureIndices.begin();
 	std::vector<double>::const_iterator thresholdIt = thresholds.begin();
@@ -299,10 +299,10 @@ void DTree::fit(const DData& data)
 
 	isTrained = true;
 
-	calculateStrength(data, sampleWeights);
+	calculateOutOfBagError(data, sampleWeights);
 }
 
-DValue DTree::classify(const DSample& sample, const DData& data) const
+DValue DTree::classify(const DSample& sample) const
 {
 	
 	if (!isTrained)
@@ -329,26 +329,17 @@ DValue DTree::classify(const DSample& sample, const DData& data) const
 		}
 	}
 
-	/*
-	std::vector<DSample>::const_iterator sampleIt = data.getSamples().begin();
-
-	for (sampleIt; sampleIt != data.getSamples().end(); sampleIt++)
-	{
-		if (sampleIt->getTargetClassNumericValue() == current->classNumericValue)
-			return sampleIt->getTargetClass();
-	}
-	*/
 
 	return DValue(current->classNumericValue);
 }
 
 
-void DTree::calculateStrength(const DData& data, const std::vector<double>& sampleWeights) 
+void DTree::calculateOutOfBagError(const DData& data, const std::vector<double>& sampleWeights) 
 {
 	if (!isTrained)
 		return;
 
-	double correctClassifications = 0.0;
+	double incorrectClassifications = 0.0;
 	double totalClassifications = 0.0;
 
 	unsigned int sampleIndex = 0;
@@ -359,19 +350,18 @@ void DTree::calculateStrength(const DData& data, const std::vector<double>& samp
 		if (sampleWeights[sampleIndex] > 0.0)
 			continue;
 
-		if (classify(data[sampleIndex], data) == data[sampleIndex].getTargetClassNumericValue())
-			correctClassifications++;
+		if (classify(data[sampleIndex]).getNumericValue() != data[sampleIndex].getTargetClassNumericValue())
+			incorrectClassifications++;
 
 		totalClassifications++;
 	}
 
-	strength = correctClassifications / totalClassifications;
+	outOfBagError = incorrectClassifications / totalClassifications;
 }
 
 
-double DTree::getStrength() const
+double DTree::getOutOfBagError() const
 {
-
-	return strength;
+	return outOfBagError;
 }
 
