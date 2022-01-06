@@ -210,7 +210,10 @@ void DData::generateFeatureIndices(std::vector<unsigned int>& randomFeatureIndic
         //remove and free the memory for the indices that we dont need (which we did not pick)
         randomFeatureIndices.erase(randomFeatureIndices.begin() + mutatedFeatureCount, randomFeatureIndices.end());
     }
-    
+    else
+    {
+        randomFeatureIndices.assign(featureIndices.begin(), featureIndices.end());
+    }
     
 }
 
