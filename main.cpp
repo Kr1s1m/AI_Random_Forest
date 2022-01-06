@@ -1,37 +1,43 @@
 #include "DRandomForest.h"
 
-#include <chrono>
+const unsigned int MAX_SAMPLES = 300;
 
-const unsigned int MAX_SAMPLES = 10000;
+const unsigned int DTREE_COUNT = 10000;
+const unsigned int MAX_DEPTH = 50;
+const unsigned int MIN_SPLIT = 1;
+const unsigned int MIN_LEAF = 1;
+
+const double IMPURITY_THRESHOLD = 0.005;
+
+const bool BOOTSTRAPPING_ALLOWED = true;
+const bool REGRESSION = false;
+
+const ImpurityFunctor IMPURITY_FUNCTION = calculateShannonEntropy;
+const FeatureFunctor FEATURE_FUNCTION = squareRoot;
+
 
 int main()
-{
-    
-    DData trainingData("fruit training set.csv", MAX_SAMPLES);
-    DData testData("test set.csv", MAX_SAMPLES);
+{ 
+    //object initialization
 
-    DRandomForest randomForest;
+    DData trainingData("fruit training set 2.csv", MAX_SAMPLES);
+    DData testData("fruit test set.csv", MAX_SAMPLES);
+
+    DRandomForest randomForest(
+                               DTREE_COUNT, MAX_DEPTH, MIN_SPLIT, MIN_LEAF, 
+                               IMPURITY_THRESHOLD,
+                               BOOTSTRAPPING_ALLOWED, REGRESSION,
+                               IMPURITY_FUNCTION, 
+                               FEATURE_FUNCTION
+                              );
+
+
+
+
+    //object interface use
+
     randomForest.fit(trainingData);
-
-    auto now = std::chrono::system_clock::now();
-    auto UTC = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
-
-
-    std::ofstream results("test results " + std::to_string(UTC) + ".txt");
-
-    for (auto sample : testData.getSamples())
-    {
-        
-
-        DValue prediction = randomForest.classify(sample, trainingData);
-
-        results << "prediction: " << prediction.getNumericValue() 
-                << " actual: " << sample.getTargetClassNumericValue() 
-                << " out-of-bag-error " << randomForest.getStrength() 
-                << "\n";
-    }
-
-    results.close();
+    randomForest.classifyBatch(testData);
 
     return 0;
 
