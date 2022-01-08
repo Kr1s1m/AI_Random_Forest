@@ -84,12 +84,10 @@ void DData::enumerateUnordered()
                 (*it).getFeatureWriteAcessAt(featureIndex).setNumericValue(toNumeric[currentLabel]);
             }
             else
-            {
-                
+            {   
                 (*it).getFeatureWriteAcessAt(featureIndex).setNumericValue(currentEnumeration);
                
-                toNumeric.insert(std::make_pair(currentLabel, currentEnumeration));
-                currentEnumeration += 1.0;
+                toNumeric.insert(std::make_pair(currentLabel, currentEnumeration++));
             }
         }
 
@@ -195,26 +193,22 @@ void DData::generateFeatureIndices(std::vector<unsigned int>& randomFeatureIndic
     unsigned int mutatedFeatureCount = featureFunc(originalFeatureCount);
 
     
+    //make sure the vector is clean
+    randomFeatureIndices.clear();
 
-    //if mutated =/= original
+    //fill vector with original indices
+    randomFeatureIndices.assign(featureIndices.begin(), featureIndices.end());
+
+    //if mutated =/= original pick mutatedFeaturCount indices randomly, do the shuffle
     if (mutatedFeatureCount < originalFeatureCount)
     {
-        //make sure the vector is clean
-        randomFeatureIndices.clear();
-
-        //allocate shuffling space by filling vector with original indices
-        randomFeatureIndices.assign(featureIndices.begin(), featureIndices.end());
-
+      
         //randomly pick and place mutatedFeatureCount elements at the front of randomFeatureIndices
         //*automatically stops shuffling after mutatedFeatureCount random elements are placed
         random_unique(randomFeatureIndices.begin(), randomFeatureIndices.end(), mutatedFeatureCount);
 
         //remove and free the memory for the indices that we dont need (which we did not pick)
         randomFeatureIndices.erase(randomFeatureIndices.begin() + mutatedFeatureCount, randomFeatureIndices.end());
-    }
-    else
-    {
-        randomFeatureIndices.assign(featureIndices.begin(), featureIndices.end());
     }
     
 }
