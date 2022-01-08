@@ -6,7 +6,6 @@ DRandomForest::DRandomForest(unsigned int _dtreeCount, unsigned int _maxDepth, u
 							 bool _bootstrappingAllowed, bool _regression, bool _multithread,
 							 ImpurityFunctor _impurityFunction, FeatureFunctor _featureFunction) :
 
-	threadCount(std::thread::hardware_concurrency()),
 	dtreeCount(_dtreeCount), maxDepth(_maxDepth), minSamplesPerSplit(_minSamplesPerSplit),
 	minSamplesPerLeaf(_minSamplesPerLeaf), impurityThreshold(_impurityThreshold),
 	bootstrappingAllowed(_bootstrappingAllowed), regression(_regression),
@@ -14,29 +13,16 @@ DRandomForest::DRandomForest(unsigned int _dtreeCount, unsigned int _maxDepth, u
 	impurityFunction(_impurityFunction), featureFunction(_featureFunction)
 
 {
+	threadCount = multithread ? std::thread::hardware_concurrency() : 1;
+
 	decisionTrees.reserve(_dtreeCount);
 }
 
 
-void DRandomForest::calculateOutOfBagError()
+
+void DRandomForest::multiThreadFit(const DData& data, unsigned int _threadCount)
 {
-	if (!isTrained)
-		return;
-
-	double errorSum = 0.0;
-
-	std::vector<DTree>::const_iterator treeIt = decisionTrees.begin();
-
-	for (treeIt; treeIt != decisionTrees.end(); treeIt++)
-		errorSum += treeIt->getOutOfBagError();
-
-	outOfBagError = errorSum / (double)dtreeCount;
-}
-
-
-void DRandomForest::multiThreadFit(const DData& data)
-{
-	ThreadPool threadPool(threadCount);
+	ThreadPool threadPool(_threadCount);
 	std::vector<std::future<DTree>> poolResults;
 
 	for (unsigned int treeIndex = 0; treeIndex < dtreeCount; treeIndex++)
@@ -67,35 +53,29 @@ void DRandomForest::multiThreadFit(const DData& data)
 
 }
 
-void DRandomForest::mainThreadFit(const DData& data)
+
+void DRandomForest::calculateOutOfBagError()
 {
+	if (!isTrained)
+		return;
 
-	for (unsigned int treeIndex = 0; treeIndex < dtreeCount; treeIndex++)
-	{
-		DTree dtree(maxDepth, minSamplesPerSplit, minSamplesPerLeaf, impurityThreshold,
-					bootstrappingAllowed, regression,
-					impurityFunction, featureFunction
-				   );
+	double errorSum = 0.0;
 
-		dtree.fit(data);
+	std::vector<DTree>::const_iterator treeIt = decisionTrees.begin();
 
-		decisionTrees.push_back(dtree);
-	}
+	for (treeIt; treeIt != decisionTrees.end(); treeIt++)
+		errorSum += treeIt->getOutOfBagError();
+
+	outOfBagError = errorSum / (double)dtreeCount;
 }
+
 
 void DRandomForest::fit(const DData& data)
 {
 
 	std::cout << "Fitting trees to \"" << data.getFileName() << "\", please wait.... ";
-
-	if (multithread)
-	{
-		multiThreadFit(data);
-	}	
-	else
-	{
-		mainThreadFit(data);
-	}
+	
+    multiThreadFit(data, threadCount);
 			
 	isTrained = true;
 
@@ -108,6 +88,7 @@ void DRandomForest::fit(const DData& data)
 	std::cout << "Done.\n"
 	<< "Your random forest is now trained and ready.\n\n";
 }
+
 
 void DRandomForest::reset()
 {
@@ -122,6 +103,7 @@ void DRandomForest::reset()
 
 	std::cout << "Done.\n\n";
 }
+
 
 DValue DRandomForest::classify(const DSample& sample) const
 {
@@ -153,6 +135,7 @@ DValue DRandomForest::classify(const DSample& sample) const
 
 	//return std::max_element(votes.begin(), votes.end(), [](const auto& x, const auto& y) {return x.second < y.second; })->first;
 }
+
 
 bool DRandomForest::classifyBatch(const DData& testData) const
 {

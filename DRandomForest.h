@@ -28,8 +28,7 @@ private:
 	ImpurityFunctor impurityFunction;
 	FeatureFunctor featureFunction;
 
-	void multiThreadFit(const DData&);
-	void mainThreadFit(const DData&);
+	void multiThreadFit(const DData&, unsigned int);
 
 	void calculateOutOfBagError();
 
