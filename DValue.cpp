@@ -76,5 +76,10 @@ void DValue::setNumericValue(double _numeric)
 
 std::ostream& operator<<(std::ostream& os, const DValue& value)
 {
-    return os << value.string;
+    if (value.isOrdered())
+        os << value.numeric;
+    else
+        os << value.string;
+
+    return os;
 }
